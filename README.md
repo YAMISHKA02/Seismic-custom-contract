@@ -11,6 +11,7 @@ bash script/deploy.sh
 Run this from `packages/cli/`:
 
 ```
+bun install
 bash script/transact.sh
 ```
 
