@@ -49,7 +49,7 @@ async function readCounter(step: number, contract: any) {
     const result = await contract.read.getNumber([])
     printSuccess(`Value: ${Number(result)}`)
   } catch (_) {
-    printFail('Value is not readable')
+    printFail('Value not readable')
   }
 }
 

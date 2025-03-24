@@ -2,62 +2,24 @@
 
 set -e
 
+source ../common/print.sh
+source ../common/wallet.sh
+
 contract_address=$(cat ../contract/out/deploy.txt)
 
-RPC_URL="https://node-2.seismicdev.net/rpc"
-FAUCET_URL="https://faucet-2.seismicdev.net/"
-CONTRACT_PATH="src/Counter.sol:Counter"
-DEPLOY_FILE="out/deploy.txt"
-
-# Colors
-GREEN='\033[0;32m'
-BLUE='\033[0;34m'
-RED='\033[0;31m'
-NC='\033[0m'
-
-print_step() {
-    echo -e "\n${BLUE} Step $1: $2${NC}"
+prelude() {
+    echo -e "${BLUE}Transact with an encrypted smart contract in under 1 minute.${NC}"
+    echo -e "Assumes you already deployed via packages/contract/."
+    echo -e "It'll increment the counter by 3, try to read it, but fail because 3 < 5."
+    echo -e "Then it'll increment by 2, try to read it, and succeed because 5 >= 5."
+    echo -ne "Press Enter to continue..."
+    read -r
 }
 
-print_success() {
-    echo -e "${GREEN}✅ $1${NC}"
-}
+prelude
 
-check_balance() {
-    local address=$1
-    local balance_json=$(curl -s -X POST "$RPC_URL" \
-        -H "Content-Type: application/json" \
-        -d '{
-            "jsonrpc":"2.0",
-            "method":"eth_getBalance",
-            "params":["'$address'", "latest"],
-            "id":1
-        }')
+dev_wallet
+address=$DEV_WALLET_ADDRESS
+privkey=$DEV_WALLET_PRIVKEY
 
-    local hex_result=$(echo "$balance_json" | grep -o '"result":"[^"]*"' | cut -d'"' -f4)
-    if [ "$hex_result" == "0x0" ]; then
-        echo -e "${RED}Error: Address not funded. Please check if your faucet transaction went through.${NC}"
-        echo -e "${RED}If the issue persists, message @lyronc on Telegram.${NC}"
-        exit 1
-    fi
-}
-
-print_step "1" "Generating new dev wallet"
-# DO NOT CREATE A WALLET LIKE THIS FOR PRODUCTION
-keypair=$(cast wallet new)
-address=$(echo "$keypair" | grep "Address:" | awk '{print $2}')
-privkey=$(echo "$keypair" | grep "Private key:" | awk '{print $3}')
-print_success "Success"
-
-print_step "2" "Funding wallet"
-echo -e "Please visit: ${GREEN}$FAUCET_URL${NC}"
-echo -e "Enter this address: ${GREEN}$address${NC}"
-echo -ne "${BLUE}Press Enter when done...${NC}"
-read -r
-
-print_step "3" "Verifying funds (takes a few seconds)"
-sleep 4
-check_balance "$address"
-print_success "Success"
-
-bun run dev $contract_address $privkey
+bun run src/index.ts $contract_address $privkey
