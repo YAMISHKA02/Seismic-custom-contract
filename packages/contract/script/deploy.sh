@@ -15,11 +15,11 @@ RED='\033[0;31m'
 NC='\033[0m'
 
 print_step() {
-    echo -e "\n${BLUE}Step $1: $2${NC}"
+    echo -e "\n\n${BLUE}Step $1: $2${NC}"
 }
 
 print_success() {
-    echo -e "${GREEN}✅ $1${NC}"
+    echo -e "✅${NC} $1"
 }
 
 check_balance() {
@@ -41,43 +41,38 @@ check_balance() {
     fi
 }
 
-# Generate new wallet
 print_step "1" "Generating new dev wallet"
+# DO NOT CREATE A WALLET LIKE THIS FOR PRODUCTION
 keypair=$(cast wallet new)
 address=$(echo "$keypair" | grep "Address:" | awk '{print $2}')
 privkey=$(echo "$keypair" | grep "Private key:" | awk '{print $3}')
 print_success "Success"
 
-# Seed wallet using faucet
 print_step "2" "Funding wallet"
 echo -e "Please visit: ${GREEN}$FAUCET_URL${NC}"
 echo -e "Enter this address: ${GREEN}$address${NC}"
 echo -ne "${BLUE}Press Enter when done...${NC}"
 read -r
 
-# Verify funds
 print_step "3" "Verifying funds (takes a few seconds)"
 sleep 4
 check_balance "$address"
 print_success "Success"
 
-# Deploy contract
 print_step "4" "Deploying contract"
 deploy_output=$(sforge create \
     --rpc-url "$RPC_URL" \
     --private-key "$privkey" \
     --broadcast \
     "$CONTRACT_PATH" \
-    --constructor-args 3 0)
+    --constructor-args 5)
 
-# Extract and print deployment info
+print_step "5" "Summarizing deployment"
 contract_address=$(echo "$deploy_output" | grep "Deployed to:" | awk '{print $3}')
 tx_hash=$(echo "$deploy_output" | grep "Transaction hash:" | awk '{print $3}')
-print_success "Success"
-
-# Print final deployment summary
-print_step "5" "Summarizing deployment"
 echo "$contract_address" >$DEPLOY_FILE
 echo -e "Contract Address:     ${GREEN}$contract_address${NC}"
 echo -e "Transaction Hash:  ${GREEN}$tx_hash${NC}"
+
+echo -e "\n"
 print_success "Success. You just deployed your first contract on Seismic!"

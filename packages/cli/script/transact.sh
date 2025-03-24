@@ -16,7 +16,7 @@ RED='\033[0;31m'
 NC='\033[0m'
 
 print_step() {
-    echo -e "\n${BLUE}Step $1: $2${NC}"
+    echo -e "\n${BLUE} Step $1: $2${NC}"
 }
 
 print_success() {
@@ -42,21 +42,19 @@ check_balance() {
     fi
 }
 
-# Generate new wallet
 print_step "1" "Generating new dev wallet"
+# DO NOT CREATE A WALLET LIKE THIS FOR PRODUCTION
 keypair=$(cast wallet new)
 address=$(echo "$keypair" | grep "Address:" | awk '{print $2}')
 privkey=$(echo "$keypair" | grep "Private key:" | awk '{print $3}')
 print_success "Success"
 
-# Seed wallet using faucet
 print_step "2" "Funding wallet"
 echo -e "Please visit: ${GREEN}$FAUCET_URL${NC}"
 echo -e "Enter this address: ${GREEN}$address${NC}"
 echo -ne "${BLUE}Press Enter when done...${NC}"
 read -r
 
-# Verify funds
 print_step "3" "Verifying funds (takes a few seconds)"
 sleep 4
 check_balance "$address"
