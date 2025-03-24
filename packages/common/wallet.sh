@@ -25,7 +25,7 @@ check_balance() {
 dev_wallet() {
     print_step "1" "Generating new dev wallet"
     # CAUTION: DO NOT GENERATE A KEYPAIR LIKE THIS FOR PRODUCTION
-    local keypair=$(cast wallet new)
+    local keypair=$(scast wallet new)
     DEV_WALLET_ADDRESS=$(echo "$keypair" | grep "Address:" | awk '{print $2}')
     DEV_WALLET_PRIVKEY=$(echo "$keypair" | grep "Private key:" | awk '{print $3}')
     print_success "Success"
