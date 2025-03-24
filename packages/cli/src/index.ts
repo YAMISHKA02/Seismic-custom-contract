@@ -1,5 +1,4 @@
 import chalk from 'chalk'
-import { join } from 'path'
 import {
   createShieldedWalletClient,
   getShieldedContract,
@@ -8,16 +7,13 @@ import {
 import { http } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
 
+import { CONTRACT_DIR, CONTRACT_NAME } from '../lib/constants'
 import {
   displayTransaction,
   printFail,
   printSuccess,
   readAbi,
-} from '../lib/util'
-
-const CONTRACT_NAME = 'Counter'
-const CONTRACT_DIR = join(__dirname, '../../contract')
-const RPC_URL = 'https://node-2.seismicdev.net/rpc'
+} from '../lib/utils'
 
 /*
  * Send encrypted transaction to increment counter. Waits for confirmation.
@@ -54,12 +50,12 @@ async function readCounter(step: number, contract: any) {
 }
 
 async function main() {
-  const [contractAddr, privkey] = process.argv.slice(2)
+  const [rpcUrl, contractAddr, privkey] = process.argv.slice(2)
 
   const abi = await readAbi(CONTRACT_DIR, CONTRACT_NAME)
   const walletClient = await createShieldedWalletClient({
     chain: seismicDevnet,
-    transport: http(RPC_URL),
+    transport: http(rpcUrl),
     account: privateKeyToAccount(privkey as `0x${string}`),
   })
   const contract = getShieldedContract({

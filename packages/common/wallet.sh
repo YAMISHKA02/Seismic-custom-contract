@@ -1,12 +1,7 @@
 #!/bin/bash
 
-RPC_URL="https://node-2.seismicdev.net/rpc"
-FAUCET_URL="https://faucet-2.seismicdev.net/"
-
-GREEN='\033[0;32m'
-BLUE='\033[0;34m'
-RED='\033[0;31m'
-NC='\033[0m'
+source ../../config.sh
+source ../common/print.sh
 
 check_balance() {
     local address=$1
@@ -29,6 +24,7 @@ check_balance() {
 
 dev_wallet() {
     print_step "1" "Generating new dev wallet"
+    # CAUTION: DO NOT GENERATE A KEYPAIR LIKE THIS FOR PRODUCTION
     local keypair=$(cast wallet new)
     DEV_WALLET_ADDRESS=$(echo "$keypair" | grep "Address:" | awk '{print $2}')
     DEV_WALLET_PRIVKEY=$(echo "$keypair" | grep "Private key:" | awk '{print $3}')
