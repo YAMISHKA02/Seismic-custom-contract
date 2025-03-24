@@ -2,7 +2,8 @@
 
 set -e
 
-# Constants
+contract_address=$(cat ../contract/out/deploy.txt)
+
 RPC_URL="https://node-2.seismicdev.net/rpc"
 FAUCET_URL="https://faucet-2.seismicdev.net/"
 CONTRACT_PATH="src/Counter.sol:Counter"
@@ -61,23 +62,4 @@ sleep 4
 check_balance "$address"
 print_success "Success"
 
-# Deploy contract
-print_step "4" "Deploying contract"
-deploy_output=$(sforge create \
-    --rpc-url "$RPC_URL" \
-    --private-key "$privkey" \
-    --broadcast \
-    "$CONTRACT_PATH" \
-    --constructor-args 3 0)
-
-# Extract and print deployment info
-contract_address=$(echo "$deploy_output" | grep "Deployed to:" | awk '{print $3}')
-tx_hash=$(echo "$deploy_output" | grep "Transaction hash:" | awk '{print $3}')
-print_success "Success"
-
-# Print final deployment summary
-print_step "5" "Summarizing deployment"
-echo "$contract_address" >$DEPLOY_FILE
-echo -e "Contract Address:     ${GREEN}$contract_address${NC}"
-echo -e "Transaction Hash:  ${GREEN}$tx_hash${NC}"
-print_success "Success. You just deployed your first contract on Seismic!"
+bun run dev $contract_address $privkey
