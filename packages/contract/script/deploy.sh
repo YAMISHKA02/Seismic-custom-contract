@@ -36,7 +36,7 @@ contract_address=$(echo "$deploy_output" | grep "Deployed to:" | awk '{print $3}
 tx_hash=$(echo "$deploy_output" | grep "Transaction hash:" | awk '{print $3}')
 echo "$contract_address" >"$DEPLOY_FILE"
 echo -e "Contract Address: ${GREEN}$contract_address${NC}"
-echo -e "Transaction Link: ${GREEN}$EXPLORER_URL/tx/$tx_hash${NC}"
+echo -e "Contract Link: ${GREEN}$EXPLORER_URL/address/$contract_address${NC}"
 
 echo -e "\n"
 print_success "Success. You just deployed your first contract on Seismic!"
