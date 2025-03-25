@@ -20,19 +20,24 @@ import {
  */
 async function incrementCounter(
   step: number,
+  explorerUrl: string,
   contract: any,
   walletClient: any,
   abi: any,
   amount: number
 ) {
   console.log(chalk.blue(`\n\nStep ${step}: Incrementing counter by ${amount}`))
-  const { plaintextTx, shieldedTx } = await contract.dwrite.increment([amount])
+  const { plaintextTx, shieldedTx, txHash } = await contract.dwrite.increment([
+    amount,
+  ])
   displayTransaction(plaintextTx, abi[2])
   displayTransaction(shieldedTx, undefined, true)
   await walletClient.waitForTransactionReceipt({
-    hash: await contract.write.increment([amount]),
+    hash: txHash,
   })
-  printSuccess('Transaction confirmed')
+  printSuccess(
+    `Transaction confirmed: ${chalk.green(`${explorerUrl}/tx/${txHash}`)}`
+  )
 }
 
 /*
@@ -41,16 +46,17 @@ async function incrementCounter(
  */
 async function readCounter(step: number, contract: any) {
   console.log(chalk.blue(`\n\nStep ${step}: Attempting to read counter`))
+  let result;
   try {
-    const result = await contract.read.getNumber([])
-    printSuccess(`Value: ${Number(result)}`)
+    result = Number(await contract.read.getNumber([]))
   } catch (_) {
-    printFail('Value not readable')
+    result = '???'
   }
+  printSuccess(`Value: ${chalk.green(result)}`)
 }
 
 async function main() {
-  const [rpcUrl, contractAddr, privkey] = process.argv.slice(2)
+  const [rpcUrl, explorerUrl, contractAddr, privkey] = process.argv.slice(2)
 
   const abi = await readAbi(CONTRACT_DIR, CONTRACT_NAME)
   const walletClient = await createShieldedWalletClient({
@@ -64,9 +70,9 @@ async function main() {
     client: walletClient,
   })
 
-  await incrementCounter(4, contract, walletClient, abi, 3)
+  await incrementCounter(4, explorerUrl, contract, walletClient, abi, 3)
   await readCounter(5, contract)
-  await incrementCounter(6, contract, walletClient, abi, 2)
+  await incrementCounter(6, explorerUrl, contract, walletClient, abi, 2)
   await readCounter(7, contract)
 
   console.log('\n')
