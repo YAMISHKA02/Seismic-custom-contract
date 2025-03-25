@@ -28,6 +28,10 @@ dev_wallet() {
     local keypair=$(scast wallet new)
     DEV_WALLET_ADDRESS=$(echo "$keypair" | grep "Address:" | awk '{print $2}')
     DEV_WALLET_PRIVKEY=$(echo "$keypair" | grep "Private key:" | awk '{print $3}')
+    if [ -z "$DEV_WALLET_ADDRESS" ]; then
+        echo -e "${RED}Error: Failed to create dev wallet. Please make sure sfoundry is installed.${NC}"
+        exit 1
+    fi
     print_success "Success"
 
     print_step "2" "Funding wallet"
