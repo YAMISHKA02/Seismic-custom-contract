@@ -9,7 +9,7 @@ source ../common/wallet.sh
 contract_address=$(cat ../contract/out/deploy.txt)
 
 prelude() {
-    echo -e "${BLUE}Transact with an encrypted contract in 1m.${NC}"
+    echo -e "${BLUE}Transact with an encrypted contract in <1m.${NC}"
     echo -e "It'll increment by 3, try to read it, but get back ??? because 3 < 5."
     echo -e "Then it'll increment by 2, try to read it, and succeed because 5 >= 5."
     echo -ne "Press Enter to continue..."

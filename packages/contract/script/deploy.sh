@@ -10,7 +10,7 @@ CONTRACT_PATH="src/Counter.sol:Counter"
 DEPLOY_FILE="out/deploy.txt"
 
 prelude() {
-    echo -e "${BLUE}Deploy an encrypted contract in 1m.${NC}"
+    echo -e "${BLUE}Deploy an encrypted contract in <1m.${NC}"
     echo -e "It's a Counter contract that only reveals the counter once it's >=5."
     echo -ne "Press Enter to continue..."
     read -r
