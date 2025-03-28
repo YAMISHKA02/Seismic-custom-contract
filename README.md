@@ -46,6 +46,22 @@ bash script/deploy.sh
 ```
 
 
+If you deployed official contract, you can interact with that:
+
+Install Bun
+```bash
+curl -fsSL https://bun.sh/install | bash
+```
+Install node dependencies
+```bash
+cd try-devnet/packages/cli/
+bun install
+```
+Send transactions
+```bash
+bash script/transact.sh
+```
+
                                                                                                             
                       :--------.        :----------------    ---------------   ---------                    
                      --:@@@@@#--:      ---@@@@@@@@@@@@@*--. --#@@@@@@@@@@@#-----*@@@@@---                   
