@@ -15,9 +15,6 @@ Install jq (for macOS):
 brew install jq
 ```
 
-For Linux or Windows, use the instructions here:  
-https://stedolan.github.io/jq/download/
-
 Install sfoundryup:  
 ```bash
 curl -L   -H "Accept: application/vnd.github.v3.raw"   "https://api.github.com/repos/SeismicSystems/seismic-foundry/contents/sfoundryup/install?ref=seismic" | bash
