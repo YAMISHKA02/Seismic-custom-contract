@@ -1,4 +1,4 @@
-# Deploy a Custom Contract in 5 Minutes
+## Deploy a Custom Contract in 5 Minutes
 
 Hello, this is Mishka Shishka. Use this guide to deploy a custom smart contract on the Seismic network.
 
@@ -26,7 +26,7 @@ Run sfoundryup (takes between 5 to 60 minutes, it's normal to stall at 98%):
 sfoundryup
 ```
 
-Clone a repository with a contract:  
+#Clone a repository with a contract:  
 
 Official (basic contract):  
 ```bash
@@ -46,7 +46,7 @@ bash script/deploy.sh
 ```
 
 
-If you deployed official contract, you can interact with that:
+#If you deployed official contract, you can interact with that:
 
 Install Bun
 ```bash
