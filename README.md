@@ -54,7 +54,7 @@ curl -fsSL https://bun.sh/install | bash
 ```
 Install node dependencies
 ```bash
-cd try-devnet/packages/cli/
+cd ../cli/
 bun install
 ```
 Send transactions
